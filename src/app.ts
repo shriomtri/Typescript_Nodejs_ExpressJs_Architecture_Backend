@@ -3,7 +3,7 @@ import Logger from './core/Logger';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { corsUrl, environment } from './config';
-// import './database'; // initialize database
+import './database'; // initialize database
 import { NotFoundError, ApiError, InternalError } from './core/ApiError';
 // import routesV1 from './routes/v1';
 
