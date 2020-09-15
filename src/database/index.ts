@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
 import Logger from "../core/Logger";
-import {db} from "../config";
+import {db, environment} from "../config";
 
 //Build the connection string
+const developmentDBURI = `mongodb://localhost:27017/${db.name}`
 const dbURI = `mongodb://${db.user}:${encodeURIComponent(db.password)}@${db.host}:${db.port}/${db.name}`
 
 const options = {
@@ -21,7 +22,7 @@ Logger.debug(dbURI)
 
 //Create the databse connection
 mongoose
-    .connect(dbURI, options)
+    .connect((environment === 'development') ? developmentDBURI : dbURI, options)
     .then(() => {
         Logger.info('Mongoose connection done')
     })
