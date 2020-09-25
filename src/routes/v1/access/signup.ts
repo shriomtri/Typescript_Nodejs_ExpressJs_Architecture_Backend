@@ -30,12 +30,12 @@ router.post(
                 profilePicUrl: req.body.profilePicUrl,
                 password: passwordHash
             } as User,
-            RoleCode.LEARNER
+            RoleCode.READER
         )
 
         new SuccessResponse(
             'Signup Successful',
-            _.pick(createdUser, ['_id', 'name', 'email', 'roles', 'profilePicUrl', 'token'])
+            _.pick(createdUser, ['_id', 'name', 'email', 'token'])
         ).send(res)
     })
 )

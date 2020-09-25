@@ -2,6 +2,8 @@ import User, {UserModel} from "../model/User";
 import Role, {RoleModel} from "../model/Role";
 import {InternalError} from "../../core/ApiError";
 import Jwt from "../../core/Jwt";
+import TokenRepo from "./TokenRepo";
+import Token, {TokenModel} from "../model/Token";
 
 export default class UserRepo {
 
@@ -21,26 +23,43 @@ export default class UserRepo {
     public static async create(
         user: User,
         roleCode: string,
-    ): Promise<User> {
+    ): Promise<{ user: User, token: string }> {
 
         const now = new Date()
 
-        const role = await RoleModel.findOne( {code: roleCode})
+        const role = await RoleModel.findOne({code: roleCode})
             .select('+email +password')
             .lean<Role>()
             .exec()
 
-        if(!role) throw new InternalError('Role must be defined')
+        if (!role) throw new InternalError('Role must be defined')
 
         user.roles = [role._id]
         user.createdAt = now
         user.updatedAt = now
 
-        user.token = Jwt.generateToken(user)
+        //create user
+        const createdUser = await UserModel.create(user)
 
-        if(!user.token) throw new InternalError('Unable to create user token')
+        //create user token
+        let jwtToken = Jwt.generateToken(createdUser);
 
-        return await UserModel.create(user)
+        if (!jwtToken) {
+            await UserModel.remove({_id: createdUser._id})
+            throw new InternalError('Unable to create user token')
+        }
+
+        //save token to token collection
+        let tokenStore = await TokenRepo.createToken({
+            userId: createdUser._id,
+            token: jwtToken
+        } as Token)
+
+        if(!tokenStore) {
+            throw new InternalError('Unable to create token in token store')
+        }
+
+        return { ...createdUser.toJSON() , token: jwtToken}
     }
 
 }

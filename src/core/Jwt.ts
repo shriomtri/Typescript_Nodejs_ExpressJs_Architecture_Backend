@@ -24,11 +24,11 @@ export default class Jwt {
     }
 
     public static generateToken(user: User): string {
-        return sign(user, jwtSecret, {expiresIn: '30 days'})
+        return sign(user.toObject(), jwtSecret, {expiresIn: '30 days'})
     }
 
 }
 
-interface IUserRequest extends Request {
+export interface IUserRequest extends Request {
     user: any
 }

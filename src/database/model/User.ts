@@ -12,7 +12,6 @@ export default interface User extends Document {
     roles: Role[];
     verified?: boolean;
     status?: boolean;
-    token?: string;
     updatedAt?: Date;
     createdAt?: Date;
 }
@@ -57,10 +56,6 @@ const schema = new Schema(
         status: {
             type: Schema.Types.Boolean,
             default: true,
-        },
-        token: {
-            type: Schema.Types.String,
-            default: false
         },
         createdAt: {
             type: Date,
