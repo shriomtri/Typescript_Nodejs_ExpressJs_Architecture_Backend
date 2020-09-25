@@ -11,4 +11,9 @@ export default class TokenRepo {
 
         return await TokenModel.create(token)
     }
+
+    public static async findTokenByUserId(userId: string): Promise<Token> {
+        return TokenModel.findOne({userId: userId});
+    }
+
 }

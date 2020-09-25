@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import _ from 'lodash';
 
 import validator from "../../../helpers/validator";
-import schema from "./schema";
+import schema from "../access/schema";
 import asyncHandler from "../../../helpers/asyncHandler";
 import UserRepo from "../../../database/repository/UserRepo";
 import {BadRequestError} from "../../../core/ApiError";
