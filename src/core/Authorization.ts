@@ -67,6 +67,7 @@ class Authorization {
 }
 
 
-export default Authorization.getInstance()
-
-exports.grantAccess = Authorization.grantAccess
+export default {
+    Authorization: Authorization.getInstance(),
+    grantAccess: Authorization.grantAccess
+}

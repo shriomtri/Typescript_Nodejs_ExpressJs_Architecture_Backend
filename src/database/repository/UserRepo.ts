@@ -3,7 +3,8 @@ import Role, {RoleModel} from "../model/Role";
 import {InternalError} from "../../core/ApiError";
 import Jwt from "../../core/Jwt";
 import TokenRepo from "./TokenRepo";
-import Token, {TokenModel} from "../model/Token";
+import Token from "../model/Token";
+import {Types} from "mongoose";
 
 export default class UserRepo {
 
@@ -18,6 +19,12 @@ export default class UserRepo {
             })
             .lean<User>()
             .exec();
+    }
+
+    public static findByUserId(id: Types.ObjectId): Promise<User> {
+        return UserModel.findOne({_id: id})
+            .lean<User>()
+            .exec()
     }
 
     public static async create(
@@ -54,11 +61,23 @@ export default class UserRepo {
             token: jwtToken
         } as Token)
 
-        if(!tokenStore) {
+        if (!tokenStore) {
             throw new InternalError('Unable to create token in token store')
         }
 
-        return { ...createdUser.toJSON() , token: jwtToken}
+        return {...createdUser.toJSON(), token: jwtToken}
+    }
+
+    public static async getUsers(): Promise<User[]> {
+        return await UserModel.find({})
+            .select('+email +password +roles')
+            .populate({
+                path: 'roles',
+                match: {status: true},
+                select: {code: 1},
+            })
+            .lean<User>()
+            .exec();
     }
 
 }

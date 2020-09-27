@@ -5,8 +5,8 @@ export const DOCUMENT_NAME = 'User'
 export const COLLECTION_NAME = 'users'
 
 export default interface User extends Document {
-    name: string,
-    email?: string,
+    name: string;
+    email?: string;
     password?: string;
     profilePicUrl?: string;
     roles: Role[];

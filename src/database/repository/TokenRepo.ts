@@ -13,7 +13,11 @@ export default class TokenRepo {
     }
 
     public static async findTokenByUserId(userId: string): Promise<Token> {
-        return TokenModel.findOne({userId: userId});
+        return await TokenModel.findOne({userId: userId});
+    }
+
+    public static async findUserIdByToken(token: string): Promise<Token> {
+        return await TokenModel.findOne({token: token});
     }
 
 }
