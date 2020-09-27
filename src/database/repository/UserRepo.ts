@@ -28,13 +28,12 @@ export default class UserRepo {
         const now = new Date()
 
         const role = await RoleModel.findOne({code: roleCode})
-            .select('+email +password')
             .lean<Role>()
             .exec()
 
         if (!role) throw new InternalError('Role must be defined')
 
-        user.roles = [role._id]
+        user.roles = [role]
         user.createdAt = now
         user.updatedAt = now
 
